@@ -1,135 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ขอใบเสนอราคา - โรงพิมพ์ สันสวย</title>
+    <title>ใบเสนอราคา - โรงพิมพ์อัจฉริยะ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; padding: 20px; font-family: sans-serif; }
-        .form-section { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .btn-submit { background-color: #28a745; color: white; width: 100%; padding: 15px; font-size: 1.2rem; border-radius: 10px; border: none; }
-        h5 { color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; margin-bottom: 15px; }
+        body { background-color: #f8f9fa; font-family: 'Sarabun', sans-serif; }
+        .card { border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-primary { background-color: #00b900; border: none; } /* สี Line */
+        .btn-primary:hover { background-color: #009900; }
+        .hidden-section { display: none; }
     </style>
 </head>
 <body>
+    <div class="container py-4">
+        <div class="card p-4">
+            <h4 class="text-center mb-4">📝 ขอใบเสนอราคาด่วน</h4>
+            
+            <form id="printingForm">
+                <div class="mb-3">
+                    <label class="form-label">ชื่อผู้ติดต่อ / บริษัท</label>
+                    <input type="text" class="form-control" id="customerName" placeholder="ระบุชื่อของคุณ" required>
+                </div>
 
-    <div class="container">
-        <h3 class="text-center mb-4">📝 ส่งข้อมูลขอใบเสนอราคา</h3>
-
-        <div class="form-section">
-            <h5>1. ข้อมูลพื้นฐาน & ไฟล์งาน</h5>
-            <div class="mb-3">
-                <label class="form-label">ชื่อผู้ติดต่อ / บริษัท</label>
-                <input type="text" id="custName" class="form-control" placeholder="ระบุชื่อของท่าน" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">อัปโหลดไฟล์ Artwork (ถ้ามี)</label>
-                <input type="file" id="fileUpload" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">วันที่ต้องการรับงาน (งานด่วนระบุได้)</label>
-                <input type="date" id="dueDate" class="form-control">
-            </div>
-        </div>
-
-        <div class="form-section">
-            <h5>2. รายละเอียดเนื้อใน</h5>
-            <div class="mb-3">
-                <label class="form-label">ประเภทงาน</label>
-                <select id="workType" class="form-select">
-                    <option value="book">หนังสือ / สมุด</option>
-                    <option value="brochure">แผ่นพับ / ใบปลิว</option>
-                    <option value="sticker">สติกเกอร์</option>
-                </select>
-            </div>
-            <div class="row">
-                <div class="col-6 mb-3">
-                    <label class="form-label">กระดาษเนื้อใน</label>
-                    <select id="innerPaper" class="form-select">
-                        <option value="80g-white">ปอนด์ขาว 80g</option>
-                        <option value="75g-eye">ถนอมสายตา 75g</option>
-                        <option value="105g-art">อาร์ตมัน 105g</option>
+                <div class="mb-3">
+                    <label class="form-label">ประเภทงานที่ต้องการ</label>
+                    <select class="form-select" id="workType" onchange="updateFields()" required>
+                        <option value="">-- กรุณาเลือกประเภทงาน --</option>
+                        <option value="book">หนังสือ / วารสาร / คู่มือ</option>
+                        <option value="flyer">โบรชัวร์ / ใบปลิว / แผ่นพับ</option>
+                        <option value="sticker">สติ๊กเกอร์ / ฉลากสินค้า</option>
+                        <option value="business_card">นามบัตร / การ์ดเชิญ</option>
+                        <option value="box">กล่องบรรจุภัณฑ์ / ถุงกระดาษ</option>
                     </select>
                 </div>
-                <div class="col-6 mb-3">
-                    <label class="form-label">จำนวนหน้า</label>
-                    <input type="number" id="pages" class="form-control" placeholder="0">
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label d-block">ระบบพิมพ์เนื้อใน</label>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="innerPrint" id="bw" value="BW" checked>
-                    <label class="form-check-label" for="bw">ขาวดำ</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="innerPrint" id="color" value="Color">
-                    <label class="form-check-label" for="color">4 สี</label>
-                </div>
-            </div>
-        </div>
 
-        <div class="form-section">
-            <h5>3. ปกและการเข้าเล่ม</h5>
-            <div class="mb-3">
-                <label class="form-label">กระดาษปก</label>
-                <select id="coverPaper" class="form-select">
-                    <option value="230g-art">อาร์ตการ์ด 230g</option>
-                    <option value="260g-art">อาร์ตการ์ด 260g</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label d-block">เทคนิคพิเศษ</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="laminateMatte" value="Matte">
-                    <label class="form-check-label">เคลือบด้าน</label>
+                <div id="dynamicFields" class="bg-light p-3 rounded mb-3">
+                    <p class="text-muted text-center">กรุณาเลือกประเภทงานก่อนเพื่อระบุสเปก</p>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="spotUV" value="SpotUV">
-                    <label class="form-check-label">Spot UV</label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">วิธีเข้าเล่ม</label>
-                <select id="binding" class="form-select">
-                    <option value="perfect-bind">ไสกาว</option>
-                    <option value="saddle-stitch">เย็บมุงหลังคา</option>
-                </select>
-            </div>
-        </div>
 
-        <button class="btn-submit" onclick="submitOrder()">ส่งข้อมูลให้โรงพิมพ์</button>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label">จำนวนที่สั่ง (ชุด/ชิ้น)</label>
+                        <input type="number" class="form-control" id="quantity" min="1" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">วันที่ต้องการรับงาน</label>
+                        <input type="date" class="form-control" id="dueDate">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">หมายเหตุเพิ่มเติม (ถ้ามี)</label>
+                    <textarea class="form-control" id="note" rows="2"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2">🚀 ส่งข้อมูลให้โรงพิมพ์</button>
+            </form>
+        </div>
     </div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
-        async function main() {
-            await liff.init({ liffId: "YOUR_LIFF_ID_HERE" }); // ใส่ ID ของน้องตรงนี้
-            if (!liff.isLoggedIn()) {
-                liff.login();
+        function updateFields() {
+            const workType = document.getElementById('workType').value;
+            const container = document.getElementById('dynamicFields');
+            let html = '';
+
+            if (workType === 'book') {
+                html = `
+                    <div class="mb-2"><label>จำนวนหน้าเนื้อใน:</label><input type="number" class="form-control" id="pages"></div>
+                    <div class="mb-2"><label>การเข้าเล่ม:</label>
+                        <select class="form-select" id="binding"><option>ไสสันทากาว</option><option>เย็บมุงหลังคา</option></select>
+                    </div>`;
+            } else if (workType === 'sticker') {
+                html = `
+                    <div class="mb-2"><label>รูปทรง:</label>
+                        <select class="form-select" id="shape"><option>วงกลม</option><option>สี่เหลี่ยม</option><option>ตามรูปทรง (Die-cut)</option></select>
+                    </div>
+                    <div class="mb-2"><label>ขนาดกว้าง x ยาว (ซม.):</label><input type="text" class="form-control" id="size" placeholder="เช่น 5x5"></div>`;
+            } else if (workType === 'flyer' || workType === 'business_card') {
+                html = `
+                    <div class="mb-2"><label>ขนาดงาน:</label>
+                        <select class="form-select" id="paperSize"><option>A4</option><option>A5</option><option>9x5.5 cm (นามบัตร)</option></select>
+                    </div>
+                    <div class="mb-2"><label>การเคลือบ:</label>
+                        <select class="form-select" id="coating"><option>ไม่เคลือบ</option><option>PVC เงา</option><option>PVC ด้าน</option></select>
+                    </div>`;
+            } else if (workType === 'box') {
+                html = `
+                    <div class="mb-2"><label>ประเภทกระดาษ:</label><input type="text" class="form-control" id="boxPaper" placeholder="เช่น อาร์ตการ์ด 350 แกรม"></div>
+                    <div class="mb-2"><label>เทคนิคพิเศษ:</label><input type="text" class="form-control" id="special" placeholder="เช่น ปั๊มทอง, Spot UV"></div>`;
             }
+            container.innerHTML = html || '<p class="text-muted text-center">กรุณาเลือกประเภทงานก่อนเพื่อระบุสเปก</p>';
+        }
+
+        // เชื่อมต่อ LIFF เพื่อส่งค่ากลับไปที่ n8n ผ่านห้องแชท
+        async function main() {
+            await liff.init({ liffId: "ใส่_LIFF_ID_ของน้องที่นี่" });
+            if (!liff.isLoggedIn()) { liff.login(); }
         }
         main();
 
-        function submitOrder() {
-            // รวบรวมข้อมูลทั้งหมดจากฟอร์ม
-            const orderData = {
-                custName: document.getElementById('custName').value,
-                dueDate: document.getElementById('dueDate').value,
-                workType: document.getElementById('workType').value,
-                innerPages: document.getElementById('pages').value,
-                // ... ดึงค่าอื่นๆ ให้ครบตาม ID ที่ตั้งไว้
+        document.getElementById('printingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = {
+                customer: document.getElementById('customerName').value,
+                type: document.getElementById('workType').value,
+                qty: document.getElementById('quantity').value,
+                note: document.getElementById('note').value
+                // เพิ่มรายละเอียดอื่นๆ ตาม dynamicFields
             };
-
-            // ส่งข้อความกลับเข้าไปในแชท LINE เพื่อให้ n8n ดึงไปใช้ต่อ
+            
             liff.sendMessages([{
-                'type': 'text',
-                'text': `[Order] คุณ ${orderData.custName} ขอราคา ${orderData.workType} จำนวน ${orderData.innerPages} หน้า`
+                type: 'text',
+                text: `[ขอใบเสนอราคา]\nประเภท: ${data.type}\nจำนวน: ${data.qty}\nข้อมูล: ${data.note}`
             }]).then(() => {
-                liff.closeWindow(); // ส่งเสร็จแล้วปิดหน้า LIFF ทันที
+                liff.closeWindow();
             });
-        }
+        });
     </script>
 </body>
 </html>
