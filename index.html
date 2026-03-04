@@ -3,277 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบเสนอราคาสิ่งพิมพ์ออนไลน์ | Master Print AI</title>
+    <title>ระบบประเมินราคาสิ่งพิมพ์</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f0f2f5; }
-        .form-step { display: none; }
-        .form-step.active { display: block; }
-        .step-indicator.active { color: #2563eb; border-bottom: 3px solid #2563eb; }
-        .product-card.selected { border-color: #2563eb; background-color: #eff6ff; }
+        body { font-family: 'Kanit', sans-serif; }
+        .step-inactive { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="bg-slate-100 min-h-screen">
 
-    <div class="w-full max-w-4xl bg-white shadow-2xl rounded-3xl overflow-hidden">
+    <div class="max-w-xl mx-auto bg-white shadow-2xl min-h-screen md:min-h-fit md:my-10 md:rounded-3xl overflow-hidden">
         <div class="bg-gradient-to-r from-blue-700 to-indigo-800 p-8 text-white text-center">
-            <h1 class="text-3xl font-bold">ระบบขอใบเสนอราคาสิ่งพิมพ์</h1>
-            <p class="opacity-80 mt-2">คำนวณราคาแม่นยำ อ้างอิงระบบ Digital & Offset</p>
+            <h1 class="text-2xl font-bold">ระบบขอใบเสนอราคาสิ่งพิมพ์</h1>
+            <p class="text-blue-100 text-sm mt-1 opacity-80">คำนวณราคาแม่นยำ อ้างอิงระบบ Digital & Offset</p>
         </div>
 
-        <div class="flex justify-between border-b bg-white sticky top-0 z-10">
-            <div id="ind-1" class="step-indicator active w-1/4 py-4 text-center text-sm font-bold">1. ผลิตภัณฑ์</div>
-            <div id="ind-2" class="step-indicator w-1/4 py-4 text-center text-sm font-bold">2. สเปกวัสดุ</div>
-            <div id="ind-3" class="step-indicator w-1/4 py-4 text-center text-sm font-bold">3. งานหลังพิมพ์</div>
-            <div id="ind-4" class="step-indicator w-1/4 py-4 text-center text-sm font-bold">4. สรุปราคา</div>
-        </div>
-
-        <form id="printingForm" class="p-8">
-            
-            <div id="step-1" class="form-step active space-y-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">คุณต้องการพิมพ์อะไร?</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div class="product-card border-2 rounded-2xl p-4 cursor-pointer hover:shadow-md transition text-center" onclick="selectProduct('ใบปลิว', this)">
-                        <div class="text-3xl mb-2">📄</div>
-                        <div class="font-bold">ใบปลิว / โบรชัวร์</div>
-                    </div>
-                    <div class="product-card border-2 rounded-2xl p-4 cursor-pointer hover:shadow-md transition text-center" onclick="selectProduct('หนังสือ', this)">
-                        <div class="text-3xl mb-2">📖</div>
-                        <div class="font-bold">หนังสือ / คู่มือ</div>
-                    </div>
-                    <div class="product-card border-2 rounded-2xl p-4 cursor-pointer hover:shadow-md transition text-center" onclick="selectProduct('สติ๊กเกอร์', this)">
-                        <div class="text-3xl mb-2">🏷️</div>
-                        <div class="font-bold">สติ๊กเกอร์</div>
-                    </div>
-                    <div class="product-card border-2 rounded-2xl p-4 cursor-pointer hover:shadow-md transition text-center" onclick="selectProduct('นามบัตร', this)">
-                        <div class="text-3xl mb-2">📇</div>
-                        <div class="font-bold">นามบัตร</div>
-                    </div>
-                    <div class="product-card border-2 rounded-2xl p-4 cursor-pointer hover:shadow-md transition text-center" onclick="selectProduct('กล่อง', this)">
-                        <div class="text-3xl mb-2">📦</div>
-                        <div class="font-bold">กล่องบรรจุภัณฑ์</div>
-                    </div>
-                    <div class="product-card border-2 rounded-2xl p-4 cursor-pointer hover:shadow-md transition text-center" onclick="selectProduct('ถุงกระดาษ', this)">
-                        <div class="text-3xl mb-2">🛍️</div>
-                        <div class="font-bold">ถุงกระดาษ</div>
-                    </div>
-                </div>
-                <input type="hidden" id="selectedProduct" required>
+        <div class="flex justify-between px-6 py-4 bg-white border-b overflow-x-auto">
+            <div class="step-dot flex flex-col items-center min-w-[80px]" id="dot1">
+                <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm mb-1">1</span>
+                <span class="text-[10px] text-blue-600 font-medium text-center">ผลิตภัณฑ์/<br>งานออกแบบ</span>
             </div>
+            <div class="step-dot flex flex-col items-center min-w-[80px] opacity-30" id="dot2">
+                <span class="w-8 h-8 rounded-full bg-gray-300 text-white flex items-center justify-center text-sm mb-1">2</span>
+                <span class="text-[10px] text-gray-500 text-center">สเปกวัสดุ</span>
+            </div>
+            <div class="step-dot flex flex-col items-center min-w-[80px] opacity-30" id="dot3">
+                <span class="w-8 h-8 rounded-full bg-gray-300 text-white flex items-center justify-center text-sm mb-1">3</span>
+                <span class="text-[10px] text-gray-500 text-center">งานหลังพิมพ์</span>
+            </div>
+            <div class="step-dot flex flex-col items-center min-w-[80px] opacity-30" id="dot4">
+                <span class="w-8 h-8 rounded-full bg-gray-300 text-white flex items-center justify-center text-sm mb-1">4</span>
+                <span class="text-[10px] text-gray-500 text-center">สรุปข้อมูล</span>
+            </div>
+        </div>
 
-            <div id="step-2" class="form-step space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block font-bold text-gray-700 mb-2">ชนิดกระดาษ / วัสดุ</label>
-                        <select id="paperType" class="w-full border-2 p-3 rounded-xl focus:border-blue-500 outline-none">
-                            <option value="ปอนด์ขาว 80g">ปอนด์ขาว 80g</option>
-                            <option value="อาร์ตมัน 130g">อาร์ตมัน 130g</option>
-                            <option value="อาร์ตการ์ด 230g">อาร์ตการ์ด 230g</option>
-                            <option value="คราฟท์น้ำตาล">คราฟท์น้ำตาล</option>
-                            <option value="สติ๊กเกอร์ PP">สติ๊กเกอร์ PP กันน้ำ</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-gray-700 mb-2">ขนาดงาน (กางออก)</label>
-                        <select id="size" class="w-full border-2 p-3 rounded-xl focus:border-blue-500 outline-none">
-                            <option value="A4">A4 (21 x 29.7 cm)</option>
-                            <option value="A5">A5 (14.8 x 21 cm)</option>
-                            <option value="A3">A3 (29.7 x 42 cm)</option>
-                            <option value="นามบัตร">นามบัตร (9 x 5.5 cm)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="book-only" class="hidden bg-blue-50 p-6 rounded-2xl border-2 border-blue-100">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block font-bold text-blue-800 mb-1">จำนวนหน้าเนื้อใน</label>
-                            <input type="number" id="pageCount" value="0" class="w-full border p-2 rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-blue-800 mb-1">การเข้าเล่ม</label>
-                            <select id="binding" class="w-full border p-2 rounded-lg">
-                                <option value="ไสกาว">ไสกาว (แนะนำ 60 หน้าขึ้นไป)</option>
-                                <option value="เย็บมุงหลังคา">เย็บมุงหลังคา (สำหรับเล่มบาง)</option>
-                                <option value="ห่วงกระดูกงู">ห่วงกระดูกงู</option>
-                            </select>
-                        </div>
+        <form id="multiStepForm" class="p-6">
+            
+            <div id="step1" class="step-content space-y-5">
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <label class="block text-sm font-semibold text-blue-900 mb-3">🎨 ไฟล์งาน / บริการออกแบบ</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center p-3 bg-white rounded-lg border border-blue-200 cursor-pointer shadow-sm">
+                            <input type="radio" name="designService" value="มีไฟล์พร้อมพิมพ์" checked class="w-4 h-4 text-blue-600">
+                            <span class="ml-3 text-sm text-gray-700 font-medium">มีไฟล์พร้อมพิมพ์ (AI, PDF, JPG)</span>
+                        </label>
+                        <label class="flex items-center p-3 bg-white rounded-lg border border-blue-200 cursor-pointer shadow-sm">
+                            <input type="radio" name="designService" value="ต้องการให้ออกแบบใหม่" class="w-4 h-4 text-blue-600">
+                            <span class="ml-3 text-sm text-gray-700 font-medium">ต้องการให้ออกแบบใหม่ทั้งหมด</span>
+                        </label>
                     </div>
                 </div>
 
-                <div id="flyer-only" class="hidden bg-orange-50 p-6 rounded-2xl border-2 border-orange-100">
-                    <label class="block font-bold text-orange-800 mb-2">รูปแบบการพับ</label>
-                    <select id="folding" class="w-full border p-2 rounded-lg">
-                        <option value="ไม่พับ">ไม่พับ (กางปลิว)</option>
-                        <option value="พับครึ่ง">พับ 1 ตอน (พับครึ่ง)</option>
-                        <option value="พับ 2 ตอน 3 พับ">พับ 2 ตอน (3 พับจดหมาย)</option>
-                        <option value="พับ 3 ตอน 4 พับ">พับ 3 ตอน (4 พับซิกแซก)</option>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ประเภทงานพิมพ์</label>
+                    <select id="workType" onchange="togglePageInput()" class="w-full rounded-xl border-gray-300 border p-3 focus:ring-2 focus:ring-blue-500 transition-all" required>
+                        <option value="หนังสือ">หนังสือ/วารสาร</option>
+                        <option value="แผ่นพับ">แผ่นพับ/ใบปลิว</option>
+                        <option value="นามบัตร">นามบัตร</option>
+                        <option value="กล่อง">กล่องบรรจุภัณฑ์</option>
+                        <option value="สติกเกอร์">สติกเกอร์</option>
                     </select>
                 </div>
 
-                <div class="flex justify-between">
-                    <button type="button" onclick="goToStep(1)" class="text-gray-400 font-bold hover:text-gray-600">← ย้อนกลับ</button>
-                    <button type="button" onclick="goToStep(3)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg">ถัดไป →</button>
+                <div id="pageInput" class="animate-pulse shadow-inner bg-gray-50 p-3 rounded-lg">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">จำนวนหน้าเนื้อใน (เฉพาะงานเล่ม)</label>
+                    <input type="number" id="pages" placeholder="เช่น 60" class="w-full rounded-lg border-gray-300 border p-3">
                 </div>
             </div>
 
-            <div id="step-3" class="form-step space-y-6">
-                <label class="block font-bold text-gray-700 text-center text-lg">งานหลังพิมพ์ & การเคลือบ</label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <label class="flex items-center space-x-2 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                        <input type="checkbox" id="uv" class="w-5 h-5"> <span>เคลือบ UV</span>
-                    </label>
-                    <label class="flex items-center space-x-2 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                        <input type="checkbox" id="pvc_matte" class="w-5 h-5"> <span>PVC ด้าน</span>
-                    </label>
-                    <label class="flex items-center space-x-2 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                        <input type="checkbox" id="spot_uv" class="w-5 h-5"> <span>Spot UV</span>
-                    </label>
-                    <label class="flex items-center space-x-2 p-3 border rounded-xl cursor-pointer hover:bg-gray-50">
-                        <input type="checkbox" id="foil" class="w-5 h-5"> <span>ปั๊มเงิน/ทอง</span>
-                    </label>
-                </div>
-
-                <div class="pt-6 border-t">
-                    <label class="block font-bold text-gray-700 mb-2 text-center text-xl">ระบุจำนวนที่ต้องการสั่งผลิต</label>
-                    <input type="number" id="qty" value="100" min="1" class="w-full border-4 border-blue-500 p-4 rounded-2xl text-center text-3xl font-bold text-blue-700 focus:outline-none">
-                    <p class="text-center text-gray-400 mt-2 italic text-sm">*ระบบจะเลือก Digital (น้อย) หรือ Offset (มาก) ให้อัตโนมัติ</p>
-                </div>
-
-                <div class="flex justify-between mt-8">
-                    <button type="button" onclick="goToStep(2)" class="text-gray-400 font-bold hover:text-gray-600">← ย้อนกลับ</button>
-                    <button type="button" onclick="renderSummary()" class="bg-green-600 text-white px-10 py-3 rounded-xl font-bold shadow-lg hover:bg-green-700 transition">คำนวณราคาประเมิน →</button>
-                </div>
-            </div>
-
-            <div id="step-4" class="form-step space-y-8 text-center">
-                <div class="bg-blue-50 p-10 rounded-3xl border-2 border-blue-200">
-                    <p class="text-gray-500 uppercase tracking-widest text-sm mb-2">ราคาสุทธิประเมินเบื้องต้น</p>
-                    <h2 id="finalPrice" class="text-6xl font-black text-blue-800">0.00</h2>
-                    <p class="text-blue-600 font-bold text-xl mt-2">บาท</p>
-                    <div id="unitPrice" class="mt-4 text-gray-400 font-semibold italic border-t pt-4">เฉลี่ยชิ้นละ 0.00 บาท</div>
-                    <p class="text-red-500 text-xs mt-2 italic">*ราคานี้เป็นราคาประเมินเบื้องต้น อาจมีการเปลี่ยนแปลงตามไฟล์งานจริง</p>
-                </div>
-
-                <div class="text-left bg-gray-50 p-6 rounded-2xl border-2 border-dashed border-gray-200">
-                    <h4 class="font-bold text-gray-700 mb-2">📄 สรุปรายละเอียดงาน:</h4>
-                    <div id="summaryContent" class="text-gray-600 space-y-1 text-sm"></div>
-                </div>
-
-                <div class="flex flex-col space-y-4">
-                    <button type="button" onclick="sendToN8n()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-xl shadow-xl hover:bg-blue-700 transform hover:scale-[1.02] transition">
-                        📲 ยืนยันขอใบเสนอราคาทางการ
-                    </button>
-                    <button type="button" onclick="location.reload()" class="text-gray-400 underline">ล้างข้อมูล/เริ่มใหม่</button>
+            <div id="step2" class="step-content step-inactive space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ชนิดกระดาษ / วัสดุ</label>
+                        <select id="paper" class="w-full rounded-xl border-gray-300 border p-3">
+                            <option>ปอนด์ขาว 80g</option>
+                            <option>อาร์ตมัน 105g</option>
+                            <option>อาร์ตมัน 130g</option>
+                            <option>อาร์ตการ์ด 260g</option>
+                            <option>สติกเกอร์ขาวเงา</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ขนาดงาน (กางออก)</label>
+                        <select id="size" class="w-full rounded-xl border-gray-300 border p-3">
+                            <option>A4 (21 x 29.7 cm)</option>
+                            <option>A5 (14.8 x 21 cm)</option>
+                            <option>A3 (29.7 x 42 cm)</option>
+                            <option>ขนาดกำหนดเอง (ระบุในหมายเหตุ)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">จำนวนสั่งผลิต</label>
+                        <input type="number" id="quantity" placeholder="100" class="w-full rounded-xl border-gray-300 border p-3">
+                    </div>
                 </div>
             </div>
 
+            <div id="step3" class="step-content step-inactive space-y-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">เทคนิคพิเศษและการเข้าเล่ม</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center p-3 border rounded-xl hover:bg-slate-50"><input type="checkbox" name="finish" value="เคลือบเงา" class="w-4 h-4"> <span class="ml-2 text-sm">เคลือบเงา</span></label>
+                    <label class="flex items-center p-3 border rounded-xl hover:bg-slate-50"><input type="checkbox" name="finish" value="เคลือบด้าน" class="w-4 h-4"> <span class="ml-2 text-sm">เคลือบด้าน</span></label>
+                    <label class="flex items-center p-3 border rounded-xl hover:bg-slate-50"><input type="checkbox" name="finish" value="Spot UV" class="w-4 h-4"> <span class="ml-2 text-sm">Spot UV</span></label>
+                    <label class="flex items-center p-3 border rounded-xl hover:bg-slate-50"><input type="checkbox" name="finish" value="ปั๊มนูน" class="w-4 h-4"> <span class="ml-2 text-sm">ปั๊มนูน</span></label>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mt-4 mb-1">การเข้าเล่ม</label>
+                    <select id="binding" class="w-full rounded-xl border-gray-300 border p-3">
+                        <option>ไม่มี</option>
+                        <option>ไสกาว (แนะนำ 60 หน้าขึ้นไป)</option>
+                        <option>เย็บมุงหลังคา</option>
+                        <option>พับครึ่ง / พับ 3 ตอน</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="step4" class="step-content step-inactive">
+                <div class="bg-gray-50 p-5 rounded-2xl border-2 border-dashed border-gray-200">
+                    <h3 class="font-bold text-gray-800 border-b pb-2 mb-3">📋 ตรวจสอบสเปกของคุณ</h3>
+                    <div id="summaryContent" class="space-y-2 text-sm text-gray-600">
+                        </div>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-4 text-center">* เมื่อกดส่ง ข้อมูลจะถูกส่งเข้าห้องแชทของเจ้าหน้าที่ทันที</p>
+            </div>
+
+            <div class="flex gap-3 mt-8">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="flex-1 py-4 px-6 bg-gray-100 text-gray-500 rounded-2xl font-bold hidden hover:bg-gray-200 transition-all">← ย้อนกลับ</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)" class="flex-[2] py-4 px-6 bg-blue-600 text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all text-center">ถัดไป →</button>
+            </div>
         </form>
     </div>
 
     <script>
+        // --- ใส่ LIFF ID ของคุณที่นี่ ---
+        const MY_LIFF_ID = "YOUR_LIFF_ID"; 
+
         let currentStep = 1;
-        let selectedProduct = "";
 
-        function selectProduct(name, el) {
-            selectedProduct = name;
-            document.getElementById('selectedProduct').value = name;
-            document.querySelectorAll('.product-card').forEach(card => card.classList.remove('selected'));
-            el.classList.add('selected');
+        async function initLiff() {
+            try {
+                await liff.init({ liffId: MY_LIFF_ID });
+                if (!liff.isLoggedIn()) liff.login();
+            } catch (err) { console.error(err); }
+        }
+        initLiff();
 
-            // แสดงช่องกรอกพิเศษตามประเภทสินค้า
-            document.getElementById('book-only').classList.toggle('hidden', name !== 'หนังสือ');
-            document.getElementById('flyer-only').classList.toggle('hidden', name !== 'ใบปลิว');
-
-            setTimeout(() => goToStep(2), 300);
+        function togglePageInput() {
+            const type = document.getElementById('workType').value;
+            const pInput = document.getElementById('pageInput');
+            pInput.style.display = (type === 'หนังสือ') ? 'block' : 'none';
         }
 
-        function goToStep(step) {
-            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-            document.getElementById(`step-${step}`).classList.add('active');
+        function nextPrev(n) {
+            const steps = document.getElementsByClassName("step-content");
             
-            document.querySelectorAll('.step-indicator').forEach(ind => ind.classList.remove('active'));
-            for(let i=1; i<=step; i++) {
-                document.getElementById(`ind-${i}`).classList.add('active');
+            // ตรวจสอบการกรอกข้อมูลก่อนไปขั้นตอนถัดไป (Basic Validation)
+            if (n == 1 && currentStep == 1 && !document.getElementById('workType').value) return false;
+
+            steps[currentStep - 1].classList.add("step-inactive");
+            currentStep += n;
+
+            if (currentStep > steps.length) {
+                submitFinalData();
+                return false;
             }
-            currentStep = step;
-            window.scrollTo(0, 0);
+            
+            showStep(currentStep);
         }
 
-        function renderSummary() {
-            const qty = parseInt(document.getElementById('qty').value);
-            const product = selectedProduct;
-            const paper = document.getElementById('paperType').value;
-            const size = document.getElementById('size').value;
-            const pages = parseInt(document.getElementById('pageCount').value) || 0;
-            const folding = document.getElementById('folding').value;
-
-            // --- PRICING LOGIC ---
-            let unitPrice = 0;
-            let setupFee = 0;
-
-            if (qty < 500) { 
-                // DIGITAL LOGIC
-                unitPrice = 7.0; 
-                if(product === "หนังสือ") unitPrice = (pages * 0.65) + 15;
-                if(product === "นามบัตร") unitPrice = 1.5;
+        function showStep(n) {
+            const steps = document.getElementsByClassName("step-content");
+            steps[n - 1].classList.remove("step-inactive");
+            
+            // ปรับปุ่ม ย้อนกลับ/ถัดไป
+            document.getElementById("prevBtn").style.display = (n == 1) ? "none" : "inline";
+            if (n == steps.length) {
+                document.getElementById("nextBtn").innerText = "ส่งข้อมูลประเมินราคา";
+                document.getElementById("nextBtn").classList.replace("bg-blue-600", "bg-green-600");
+                updateSummary();
             } else {
-                // OFFSET LOGIC (Economy of Scale)
-                setupFee = 1500;
-                unitPrice = 1.2;
-                if(product === "หนังสือ") unitPrice = (pages * 0.4) + 8;
+                document.getElementById("nextBtn").innerText = "ถัดไป →";
+                document.getElementById("nextBtn").classList.replace("bg-green-600", "bg-blue-600");
             }
 
-            // เพิ่มค่าเทคนิค
-            if(document.getElementById('uv').checked) unitPrice += 0.5;
-            if(document.getElementById('pvc_matte').checked) unitPrice += 1.5;
-            if(document.getElementById('spot_uv').checked) unitPrice += 2.5;
-            if(folding !== "ไม่พับ") unitPrice += 0.2;
+            // อัปเดต Stepper Dots
+            for(let i=1; i<=4; i++) {
+                const dot = document.getElementById("dot" + i);
+                if(i <= n) {
+                    dot.classList.remove("opacity-30");
+                    dot.querySelector('span:first-child').classList.replace("bg-gray-300", "bg-blue-600");
+                } else {
+                    dot.classList.add("opacity-30");
+                    dot.querySelector('span:first-child').classList.replace("bg-blue-600", "bg-gray-300");
+                }
+            }
+        }
 
-            const total = (qty * unitPrice) + setupFee;
-
-            document.getElementById('finalPrice').innerText = total.toLocaleString('th-TH', {minimumFractionDigits: 2});
-            document.getElementById('unitPrice').innerText = `เฉลี่ยชิ้นละ: ${(total/qty).toFixed(2)} บาท`;
-
-            document.getElementById('summaryContent').innerHTML = `
-                • ผลิตภัณฑ์: ${product}<br>
-                • จำนวน: ${qty.toLocaleString()} ชุด<br>
-                • วัสดุ: ${paper} | ขนาด: ${size}<br>
-                ${product === 'หนังสือ' ? `• เนื้อใน: ${pages} หน้า | เข้าเล่ม: ${document.getElementById('binding').value}<br>` : ''}
-                ${product === 'ใบปลิว' ? `• การพับ: ${folding}<br>` : ''}
-                • งานหลังพิมพ์: ${[
-                    document.getElementById('uv').checked ? "UV" : "",
-                    document.getElementById('pvc_matte').checked ? "PVC" : "",
-                    document.getElementById('spot_uv').checked ? "Spot UV" : "",
-                    document.getElementById('foil').checked ? "ปั๊มฟอยล์" : ""
-                ].filter(t => t !== "").join(", ") || "มาตรฐาน"}
+        function updateSummary() {
+            const design = document.querySelector('input[name="designService"]:checked').value;
+            const type = document.getElementById('workType').value;
+            const summary = document.getElementById('summaryContent');
+            summary.innerHTML = `
+                <p><b>บริการ:</b> ${design}</p>
+                <p><b>งาน:</b> ${type}</p>
+                <p><b>สเปก:</b> ${document.getElementById('paper').value} | ${document.getElementById('size').value}</p>
+                <p><b>จำนวนสั่ง:</b> ${document.getElementById('quantity').value} ชุด</p>
             `;
-
-            goToStep(4);
         }
 
-        async function sendToN8n() {
-            const webhookUrl = "https://n8n.jack-toy.xyz/rest/oauth2-credential/callback"; // เปลี่ยนเป็น Webhook จริงของ n8n นะน้อง
-            
-            const payload = {
-                source: "LIFF Web Form",
-                product: selectedProduct,
-                quantity: document.getElementById('qty').value,
-                paper: document.getElementById('paperType').value,
-                size: document.getElementById('size').value,
-                pages: document.getElementById('pageCount').value,
-                folding: document.getElementById('folding').value,
-                price_estimated: document.getElementById('finalPrice').innerText,
-                summary: document.getElementById('summaryContent').innerText.replace(/<br>/g, "\n")
-            };
+        async function submitFinalData() {
+            const btn = document.getElementById('nextBtn');
+            btn.disabled = true;
+            btn.innerText = "กำลังส่ง...";
 
-            // แสดงหน้าโหลด
-            alert("กำลังส่งข้อมูลไปยัง n8n... บอทจะทำการตรวจสอบคัมภีร์โรงพิมพ์และตอบกลับคุณทาง LINE ทันที!");
-            console.log("JSON Payload to n8n:", payload);
-            
-            // หมายเหตุ: ตรงนี้ถ้า Webhook ยังไม่เปิดจริงจะ Error นะครับ แต่น้องสามารถแก้โค้ดเพื่อส่งไปจริงได้เลย
+            const design = document.querySelector('input[name="designService"]:checked').value;
+            const type = document.getElementById('workType').value;
+            const size = document.getElementById('size').value;
+            const paper = document.getElementById('paper').value;
+            const qty = document.getElementById('quantity').value;
+            const pages = document.getElementById('pages').value || "-";
+            const binding = document.getElementById('binding').value;
+
+            const finishes = [];
+            document.querySelectorAll('input[name="finish"]:checked').forEach(c => finishes.push(c.value));
+
+            const textMsg = `🛎 *ขอใบเสนอราคาใหม่*\n` +
+                            `------------------\n` +
+                            `🎨 งานออกแบบ: ${design}\n` +
+                            `📌 ประเภท: ${type}\n` +
+                            `📏 ขนาด: ${size}\n` +
+                            `📄 จำนวน: ${pages} หน้า / ${qty} ชุด\n` +
+                            `📝 วัสดุ: ${paper}\n` +
+                            `✨ เทคนิค: ${finishes.join(', ') || 'ไม่มี'}\n` +
+                            `📖 การเข้าเล่ม: ${binding}`;
+
+            try {
+                await liff.sendMessages([{ type: 'text', text: textMsg }]);
+                liff.closeWindow();
+            } catch (err) {
+                alert("เกิดข้อผิดพลาด: " + err.message);
+                btn.disabled = false;
+            }
         }
+        
+        // Initial call
+        togglePageInput();
     </script>
 </body>
 </html>
