@@ -55,48 +55,44 @@
             </div>
 
             <div id="step2" class="hidden space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block font-semibold mb-2">ชนิดกระดาษ</label>
-                        <select id="paperType" class="w-full border p-3 rounded-lg">
-                            <option value="ปอนด์ขาว 80g">ปอนด์ขาว 80g</option>
-                            <option value="อาร์ตมัน 130g">อาร์ตมัน 130g</option>
-                            <option value="อาร์ตการ์ด 230g">อาร์ตการ์ด 230g</option>
-                            <option value="PP กันน้ำ">สติ๊กเกอร์ PP (กันน้ำ)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-2">ขนาดงาน</label>
-                        <select id="size" class="w-full border p-3 rounded-lg">
-                            <option value="A4">A4</option>
-                            <option value="A5">A5</option>
-                            <option value="นามบัตร">9 x 5.5 cm</option>
-                        </select>
-                    </div>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label class="block font-semibold mb-2">ชนิดกระดาษ</label>
+            <select id="paperType" class="w-full border p-3 rounded-lg">
+                <option value="ปอนด์ขาว 80g">ปอนด์ขาว 80g</option>
+                <option value="อาร์ตมัน 130g">อาร์ตมัน 130g (ยอดนิยมสำหรับโบรชัวร์)</option>
+                <option value="อาร์ตการ์ด 230g">อาร์ตการ์ด 230g</option>
+            </select>
+        </div>
+        <div>
+            <label class="block font-semibold mb-2">ขนาดกางออก</label>
+            <select id="size" class="w-full border p-3 rounded-lg">
+                <option value="A4">A4 (21 x 29.7 cm)</option>
+                <option value="A5">A5</option>
+                <option value="A3">A3</option>
+            </select>
+        </div>
+    </div>
 
-                <div id="bookDetails" class="hidden bg-blue-50 p-4 rounded-xl border border-blue-200">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block font-semibold text-blue-800 mb-1">จำนวนหน้าเนื้อใน</label>
-                            <input type="number" id="pageCount" value="8" min="2" class="w-full border p-2 rounded">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-blue-800 mb-1">การเข้าเล่ม</label>
-                            <select id="binding" class="w-full border p-2 rounded">
-                                <option value="เย็บมุงหลังคา">เย็บมุงหลังคา</option>
-                                <option value="ไสกาว">ไสกาว</option>
-                                <option value="เย็บกี่">เย็บกี่ (ปกแข็ง)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
+    <div id="foldingDetails" class="bg-orange-50 p-4 rounded-xl border border-orange-200">
+        <label class="block font-semibold text-orange-800 mb-2">รูปแบบการพับ</label>
+        <select id="foldingStyle" class="w-full border p-2 rounded">
+            <option value="ไม่พับ">ไม่พับ (กางปลิว)</option>
+            <option value="พับครึ่ง">พับ 1 ตอน (พับครึ่ง)</option>
+            <option value="พับ 2 ตอน 3 พับ">พับ 2 ตอน (3 พับจดหมาย/พับซิกแซก)</option>
+            <option value="พับ 3 ตอน 4 พับ">พับ 3 ตอน (4 พับ)</option>
+        </select>
+        <p class="text-xs text-orange-600 mt-2">* ราคาจะคำนวณค่าแรงพับเพิ่มตามจำนวนจุดพับ</p>
+    </div>
 
-                <div class="flex justify-between mt-8">
-                    <button type="button" onclick="prevStep(1)" class="text-gray-500 font-semibold">← ย้อนกลับ</button>
-                    <button type="button" onclick="nextStep(3)" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold">ถัดไป →</button>
-                </div>
-            </div>
+    <div id="bookDetails" class="hidden bg-blue-50 p-4 rounded-xl border border-blue-200">
+        </div>
+
+    <div class="flex justify-between mt-8">
+        <button type="button" onclick="prevStep(1)" class="text-gray-500 font-semibold">← ย้อนกลับ</button>
+        <button type="button" onclick="nextStep(3)" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold">ถัดไป →</button>
+    </div>
+</div>
 
             <div id="step3" class="hidden space-y-6">
                 <label class="block font-semibold mb-4 text-gray-700">เทคนิคพิเศษหลังพิมพ์</label>
